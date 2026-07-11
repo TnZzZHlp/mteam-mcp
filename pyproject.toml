@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mteam-mcp"
+version = "0.1.0"
+description = "M-Team torrent search and download MCP server for Hermes Agent"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "TnZzZHlp" }]
+dependencies = [
+  "fastmcp>=2.0,<3",
+  "httpx>=0.27,<1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10"]
+
+[project.scripts]
+mteam-mcp = "mteam_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mteam_mcp"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
