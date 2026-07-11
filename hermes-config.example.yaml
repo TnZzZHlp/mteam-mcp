@@ -1,0 +1,23 @@
+mcp_servers:
+  mteam:
+    command: "uvx"
+    args:
+      - "--from"
+      - "git+https://github.com/TnZzZHlp/mteam-mcp.git"
+      - "mteam-mcp"
+    env:
+      MTEAM_API_KEY: "replace_me"
+      MTEAM_API_BASE: "https://api.m-team.cc/api"
+      MTEAM_DOWNLOAD_DIR: "~/.hermes/downloads/mteam"
+      MTEAM_TIMEOUT: "30"
+    enabled: true
+    timeout: 120
+    connect_timeout: 30
+    supports_parallel_tool_calls: false
+    tools:
+      include:
+        - search_torrents
+        - get_torrent_detail
+        - download_torrent
+      resources: false
+      prompts: false
