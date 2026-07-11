@@ -6,11 +6,32 @@
 
 | MCP 工具 | 功能 |
 |---|---|
-| `search_torrents` | 按关键词、分区、分类、优惠、编码和存活状态查询种子 |
-| `get_torrent_detail` | 根据数字种子 ID 获取详情和做种状态 |
+| `search_torrents` | 按关键词、分区、分类、优惠、编码和存活状态查询种子，返回 AI 易读的 Markdown |
+| `get_torrent_detail` | 根据数字种子 ID 获取详情和做种状态，返回 AI 易读的 Markdown |
 | `download_torrent` | 生成临时下载令牌并将 `.torrent` 文件保存到本地目录 |
 
 下载令牌只在进程内部使用，不会返回给模型。M-Team API Key 仅通过环境变量传入。
+
+### Markdown 输出格式
+
+`search_torrents` 和 `get_torrent_detail` 都返回 Markdown 文本，而不是直接把原始 API JSON 交给模型。
+
+搜索结果包含：
+
+- 查询词、模式、当前页、每页数量、总结果和总页数
+- 种子 ID、名称、大小、做种人数、下载人数、优惠和标签
+- 查看详情、下载以及翻到下一页的明确调用提示
+
+详情结果包含：
+
+- 基本信息：种子 ID、名称、分类、大小、文件数量、发布时间和标签
+- 简介
+- 活跃状态：做种、下载、完成人次、可见状态和禁用状态
+- 优惠状态
+- IMDb、豆瓣等合法外部链接
+- `download_torrent` 的调用参数提示
+
+M-Team 返回的标题、简介和标签会进行 Markdown 转义，并标记为外部元数据，避免被误当成系统操作指令。底层客户端仍保留结构化字典，因此不会影响下载和内部处理。
 
 ## Hermes Agent 配置
 
