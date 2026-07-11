@@ -12,6 +12,16 @@
 
 下载令牌只在进程内部使用，不会返回给模型。M-Team API Key 仅通过环境变量传入。
 
+## API 环境
+
+本项目默认并直接使用 M-Team 正式环境 API：
+
+```text
+https://api.m-team.cc/api
+```
+
+除非显式覆盖 `MTEAM_API_BASE`，客户端始终连接正式环境。
+
 ### Markdown 输出格式
 
 `search_torrents` 和 `get_torrent_detail` 都返回 Markdown 文本，而不是直接把原始 API JSON 交给模型。
@@ -35,7 +45,7 @@ M-Team 返回的标题、简介和标签会进行 Markdown 转义，并标记为
 
 ## Hermes Agent 配置
 
-需要先安装 [`uv`](https://docs.astral.sh/uv/)。将以下内容加入 Hermes 的 MCP 配置：
+需要先安装 [`uv`](https://docs.astral.sh/uv/)。将以下内容加入 `~/.hermes/config.yaml`：
 
 ```yaml
 mcp_servers:
@@ -50,6 +60,7 @@ mcp_servers:
       MTEAM_API_BASE: "https://api.m-team.cc/api"
       MTEAM_DOWNLOAD_DIR: "~/.hermes/downloads/mteam"
       MTEAM_TIMEOUT: "30"
+      MTEAM_MAX_TORRENT_BYTES: "33554432"
     enabled: true
     timeout: 120
     connect_timeout: 30
@@ -60,7 +71,13 @@ mcp_servers:
       prompts: false
 ```
 
-修改后在 Hermes 中执行：
+修改后执行：
+
+```bash
+hermes mcp test mteam
+```
+
+然后在 Hermes 会话中运行：
 
 ```text
 /reload-mcp
@@ -73,16 +90,6 @@ mcp_mteam_search_torrents
 mcp_mteam_get_torrent_detail
 mcp_mteam_download_torrent
 ```
-
-### 使用测试环境
-
-将配置中的 API 地址改为：
-
-```yaml
-MTEAM_API_BASE: "https://test2.m-team.cc/api"
-```
-
-测试环境和正式环境可能使用不同账号数据或 API Key。
 
 ## 本地运行
 
@@ -106,7 +113,7 @@ cp .env.example .env
 | 变量 | 必填 | 默认值 | 说明 |
 |---|---|---|---|
 | `MTEAM_API_KEY` | 是 | 无 | M-Team API Key |
-| `MTEAM_API_BASE` | 否 | `https://api.m-team.cc/api` | API 根地址 |
+| `MTEAM_API_BASE` | 否 | `https://api.m-team.cc/api` | 正式环境 API 根地址 |
 | `MTEAM_DOWNLOAD_DIR` | 否 | `~/.hermes/downloads/mteam` | `.torrent` 保存目录 |
 | `MTEAM_TIMEOUT` | 否 | `30` | HTTP 超时秒数 |
 | `MTEAM_MAX_TORRENT_BYTES` | 否 | `33554432` | 单个种子文件最大字节数 |
